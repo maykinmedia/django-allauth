@@ -60,6 +60,11 @@ class OAuthLoginView(OAuthView):
         auth_url = provider.get_auth_url(request,
                                          action) or self.adapter.authorize_url
         auth_params = provider.get_auth_params(request, action)
+
+        next_url = request.GET.get('next', '')
+        if next_url:
+            callback_url = '{}?next={}'.format(callback_url, next_url)
+
         client = self._get_client(request, callback_url)
         try:
             return client.get_redirect(auth_url, auth_params)

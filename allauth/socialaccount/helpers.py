@@ -25,7 +25,12 @@ def _process_signup(request, sociallogin):
         sociallogin)
     if not auto_signup:
         request.session['socialaccount_sociallogin'] = sociallogin.serialize()
-        url = reverse('socialaccount_signup')
+
+        next_url = request.GET.get('next', '')
+        if next_url:
+            url = next_url
+        else:
+            url = reverse('socialaccount_signup')
         ret = HttpResponseRedirect(url)
     else:
         # Ok, auto signup it is, at least the e-mail address is ok.
